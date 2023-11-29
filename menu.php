@@ -1,4 +1,5 @@
 <?php
+include('header.html');
 
 include('connect.php');
 session_start();

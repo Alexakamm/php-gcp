@@ -1,5 +1,6 @@
 <?php
 include('connect.php');
+include('header.html');
 
 session_start();
 
