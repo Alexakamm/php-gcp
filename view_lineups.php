@@ -318,7 +318,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 
-<body>
+
     <h1>Create a New Lineup</h1>
     <?php if ($lineupMessage) { echo "<p>$lineupMessage</p>"; } ?>
 
