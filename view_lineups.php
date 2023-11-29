@@ -162,6 +162,14 @@ function addComment($pdo, $username, $lineup_id, $text) {
 }
 
 
+function fetchPlayerStatistics($pdo, $player_id) {
+    $stmt = $pdo->prepare("SELECT * FROM Statistics WHERE player_id = :player_id");
+    $stmt->bindParam(':player_id', $player_id);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (isset($_POST['lineup_name'])) {
@@ -245,24 +253,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If deleting a lineup
     else if (isset($_POST['delete_lineup_id'])) {
         $lineup_id = $_POST['delete_lineup_id'];
-    
+
         try {
             // Start a transaction
             $pdo->beginTransaction();
-    
+
             // Remove players from lineup first due to foreign key constraints
             $stmt = $pdo->prepare("DELETE FROM Included_in WHERE lineup_id = :lineup_id");
             $stmt->execute(['lineup_id' => $lineup_id]);
-            
+
             // Delete the lineup
             $stmt = $pdo->prepare("DELETE FROM Lineup WHERE lineup_id = :lineup_id");
             $stmt->execute(['lineup_id' => $lineup_id]);
-    
+
             // Commit transaction
             $pdo->commit();
-    
+
             if ($stmt->rowCount() > 0) {
                 $lineupMessage = "Lineup deleted successfully.";
+
+                // Fetch user lineups again after deletion
+                $userLineups = fetchUserLineups($pdo, $username);
             } else {
                 $lineupMessage = "Lineup not found or already deleted.";
             }
@@ -349,7 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/view_lineups.php">View Lineups</a>
+                            <a class="nav-link" href="/view_lineups.php">My Lineups</a>
                         </li>
                         <!-- Add more navigation items as needed -->
                     </ul>
@@ -358,30 +369,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </nav>
     </header>
 
-    <h1>Create a New Lineup</h1>
     <?php if ($lineupMessage) { echo "<p>$lineupMessage</p>"; } ?>
 
+<!-- ... (Previous HTML code) ... -->
 
-
-   
-    <h1>Your Lineups and Players</h1>
-    <?php foreach ($userLineups as $lineup) { ?>
+<h1>Your Lineups and Players</h1>
+<?php foreach ($userLineups as $lineup) { ?>
+    <div class="lineup-container">
         <h2><?= htmlspecialchars($lineup['name']) ?> Lineup</h2>
         <?php 
         $lineupPlayers = fetchPlayersInLineup($pdo, $lineup['lineup_id']);
         if (!empty($lineupPlayers)): ?>
-            <ul>
-                <?php foreach ($lineupPlayers as $player) { ?>
-                    <li><?= htmlspecialchars($player['name']) ?></li>
-                <?php } ?>
-            </ul>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Points per Game</th>
+                        <th>Rebounds per Game</th>
+                        <th>Assists per Game</th>
+                        <th>Steals per Game</th>
+                        <th>Blocks per Game</th>
+                        <th>Field Goal %</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($lineupPlayers as $player) { 
+                        $statistics = fetchPlayerStatistics($pdo, $player['player_id']);
+                        ?>
+                        <tr>
+                            <td><?= htmlspecialchars($player['name']) ?></td>
+                            <td><?= round(($statistics['points'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                            <td><?= round(($statistics['t_reb'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                            <td><?= round(($statistics['assists'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                            <td><?= round(($statistics['steals'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                            <td><?= round(($statistics['blocks'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                            <td><?= $statistics['fg_percent'] ?? 'N/A' ?>%</td>
+                            <td>
+                                <!-- Add your delete player button and form here -->
+                                <form action="view_lineups.php" method="post" class="player-delete-form">
+                                    <input type="hidden" name="remove_player_id" value="<?= $player['player_id'] ?>">
+                                    <input type="hidden" name="remove_lineup_id" value="<?= $lineup['lineup_id'] ?>">
+                                    <button type="submit" class="btn btn-danger">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         <?php else: ?>
             <p>No players in this lineup.</p>
         <?php endif; ?>
+        <!-- Add delete lineup button and confirmation prompt here -->
+        <form action="view_lineups.php" method="post" class="lineup-delete-form">
+            <input type="hidden" name="delete_lineup_id" value="<?= $lineup['lineup_id'] ?>">
+            <button type="submit" class="btn btn-danger" name="confirm_delete" onclick="return confirm('Are you sure you want to delete this lineup?');">Delete Lineup</button>
+        </form>
+    </div>
+<?php } ?>
 
-    <?php } ?>
+<!-- ... (Remaining HTML code) ... -->
 
 
-   
+
+
 </body>
+
 </html>

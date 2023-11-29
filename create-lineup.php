@@ -349,7 +349,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/view_lineups.php">View Lineups</a>
+                            <a class="nav-link" href="/view_lineups.php">My Lineups</a>
                         </li>
                         <!-- Add more navigation items as needed -->
                     </ul>
@@ -410,7 +410,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 
    
-    <h1>Your Lineups and Players</h1>
+    <!-- <h1>Your Lineups and Players</h1>
     <?php foreach ($userLineups as $lineup) { ?>
         <h2><?= htmlspecialchars($lineup['name']) ?> Lineup</h2>
         <?php 
@@ -425,7 +425,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p>No players in this lineup.</p>
         <?php endif; ?>
 
-    <?php } ?>
+    <?php } ?> -->
 
     <!-- Lineup Like/Unlike Section -->
     <h1>Like or Unlike a Lineup</h1>
