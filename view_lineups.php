@@ -317,12 +317,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Lineup</title>
-</head>
+
 <body>
     <h1>Create a New Lineup</h1>
     <?php if ($lineupMessage) { echo "<p>$lineupMessage</p>"; } ?>
