@@ -19,10 +19,10 @@ switch ($request) {
     case '/create-lineup.php':
         require 'create-lineup.php';
         break;
-    case '/view_lineups.php':
-        require 'view_lineups.php';
+    case '/my_lineups.php':
+        require 'my_lineups.php';
         break;
-        
+
     // Add more cases as needed for other pages
     default:
         http_response_code(404);

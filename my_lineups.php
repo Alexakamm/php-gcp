@@ -360,7 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/view_lineups.php">My Lineups</a>
+                            <a class="nav-link" href="/my_lineups.php">My Lineups</a>
                         </li>
                         <!-- Add more navigation items as needed -->
                     </ul>
@@ -407,7 +407,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td><?= $statistics['fg_percent'] ?? 'N/A' ?>%</td>
                             <td>
                                 <!-- Add your delete player button and form here -->
-                                <form action="view_lineups.php" method="post" class="player-delete-form">
+                                <form action="my_lineups.php" method="post" class="player-delete-form">
                                     <input type="hidden" name="remove_player_id" value="<?= $player['player_id'] ?>">
                                     <input type="hidden" name="remove_lineup_id" value="<?= $lineup['lineup_id'] ?>">
                                     <button type="submit" class="btn btn-danger">Remove</button>
@@ -421,7 +421,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p>No players in this lineup.</p>
         <?php endif; ?>
         <!-- Add delete lineup button and confirmation prompt here -->
-        <form action="view_lineups.php" method="post" class="lineup-delete-form">
+        <form action="my_lineups.php" method="post" class="lineup-delete-form">
             <input type="hidden" name="delete_lineup_id" value="<?= $lineup['lineup_id'] ?>">
             <button type="submit" class="btn btn-danger" name="confirm_delete" onclick="return confirm('Are you sure you want to delete this lineup?');">Delete Lineup</button>
         </form>

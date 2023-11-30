@@ -356,7 +356,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/view_lineups.php">My Lineups</a>
+                            <a class="nav-link" href="/my_lineups.php">My Lineups</a>
                         </li>
                         <!-- Add more navigation items as needed -->
                     </ul>
