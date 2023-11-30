@@ -22,6 +22,10 @@ switch ($request) {
     case '/my_lineups.php':
         require 'my_lineups.php';
         break;
+    case '/other_lineups.php':
+        require 'other_lineups.php';
+        break;
+        
 
     // Add more cases as needed for other pages
     default:

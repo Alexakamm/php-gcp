@@ -368,126 +368,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </nav>
     </header>
 
-    <div class="container mt-4">
-        <h1>Create a New Lineup</h1>
-        <?php if ($lineupMessage) { echo "<p>$lineupMessage</p>"; } ?>
-        <form action="create-lineup.php" method="post" style="width: 80%;">
-            <div class="form-group">
-                <label for="lineup_name">Lineup Name:</label>
-                <input type="text" name="lineup_name" id="lineup_name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create Lineup" class="btn btn-primary">
-            </div>
-        </form>
-
-        <h1>Players with Statistics</h1>
-
-        <div style="max-height: 500px; overflow-y: scroll; width: 80%;">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Points Per Game</th>
-                        <th>Rebounds Per Game</th>
-                        <th>Assists Per Game</th>
-                        <!-- Add other statistics headers here -->
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($players as $player) { ?>
-                        <?php
-                        $statistics = fetchPlayerStatistics($pdo, $player['player_id']);
-                        $pointsPerGame = $statistics['points'] / $statistics['games_played'];
-                        $reboundsPerGame = $statistics['t_reb'] / $statistics['games_played'];
-                        $assistsPerGame = $statistics['assists'] / $statistics['games_played'];
-                        // Calculate other statistics per game here
-                        ?>
-                        <tr>
-                            <td><?= htmlspecialchars($player['name']) ?></td>
-                            <td><?= number_format($pointsPerGame, 1) ?></td>
-                            <td><?= number_format($reboundsPerGame, 1) ?></td>
-                            <td><?= number_format($assistsPerGame, 1) ?></td>
-                            <!-- Add other statistics data here -->
-                            <td>
-                                <form action="create-lineup.php" method="post">
-                                    <input type="hidden" name="player_id" value="<?= $player['player_id'] ?>">
-                                    <select name="lineup_id" required>
-                                        <?php foreach ($userLineups as $lineup) { ?>
-                                            <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <input type="submit" value="Add to Lineup" class="btn btn-success">
-                                </form>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Remove Player from Lineup Section
-    <h1>Remove a Player from a Lineup</h1>
-    <form action="create-lineup.php" method="post">
-        Player to Remove: <select name="remove_player_id" required>
-            <?php foreach ($players as $player) { ?>
-                <option value="<?= $player['player_id'] ?>"><?= htmlspecialchars($player['name']) ?></option>
-            <?php } ?>
-        </select>
-        From Lineup: <select name="remove_lineup_id" required>
-            <?php foreach ($userLineups as $lineup) { ?>
-                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-            <?php } ?>
-        </select>
-        <input type="submit" value="Remove Player">
-    </form>
-    
-    <h1>Delete a Lineup</h1>
-    <form action="create-lineup.php" method="post">
-        Select Lineup to Delete: <select name="delete_lineup_id" required>
-            <?php foreach ($userLineups as $lineup) { ?>
-                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-            <?php } ?>
-        </select>
-        <input type="submit" value="Delete Lineup">
-    </form> -->
-
-    
-
-   
-    <!-- <h1>Your Lineups and Players</h1>
-    <?php foreach ($userLineups as $lineup) { ?>
-        <h2><?= htmlspecialchars($lineup['name']) ?> Lineup</h2>
-        <?php 
-        $lineupPlayers = fetchPlayersInLineup($pdo, $lineup['lineup_id']);
-        if (!empty($lineupPlayers)): ?>
-            <ul>
-                <?php foreach ($lineupPlayers as $player) { ?>
-                    <li><?= htmlspecialchars($player['name']) ?></li>
-                <?php } ?>
-            </ul>
-        <?php else: ?>
-            <p>No players in this lineup.</p>
-        <?php endif; ?>
-
-    <?php } ?> -->
-
     <!-- Lineup Like/Unlike Section -->
     <h1>Like or Unlike a Lineup</h1>
-        <?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
-        <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
-        <form action="create-lineup.php" method="post">
-            Select Lineup: <select name="lineup_id" required>
-                <?php foreach ($otherUsersLineups as $lineup) { ?>
-                    <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-                <?php } ?>
-            </select>
-            <input type="submit" name="like" value="Like Lineup">
-            <input type="submit" name="unlike" value="Unlike Lineup">
-        </form>
-
+    <?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
+    <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
+    <form action="create-lineup.php" method="post">
+        Select Lineup: <select name="lineup_id" required>
+            <?php foreach ($otherUsersLineups as $lineup) { ?>
+                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
+            <?php } ?>
+        </select>
+        <input type="submit" name="like" value="Like Lineup">
+        <input type="submit" name="unlike" value="Unlike Lineup">
+    </form>
 
     <!-- Comment Section -->
     <h1>Add a Comment to a Lineup</h1>
@@ -503,22 +396,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <textarea name="comment_text" id="comment_text" required maxlength="500"></textarea>
         <input type="submit" value="Add Comment">
     </form>
-  
-    <!-- Delete Comment Section -->
-<h1>Delete a Comment</h1>
-<?php
-$userComments = fetchUserComments($pdo, $username); // Fetch comments to display in the dropdown
-if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
-?>
-<form action="create-lineup.php" method="post">
-    Select Comment to Delete: <select name="delete_comment_id" required>
-        <?php foreach ($userComments as $comment) { ?>
-            <option value="<?= $comment['comment_id'] ?>"><?= htmlspecialchars($comment['text']) ?></option>
-        <?php } ?>
-    </select>
-    <input type="submit" name="delete_comment" value="Delete Comment">
-</form>
 
-   
+    <!-- Delete Comment Section -->
+    <h1>Delete a Comment</h1>
+    <?php
+    $userComments = fetchUserComments($pdo, $username); // Fetch comments to display in the dropdown
+    if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
+    ?>
+    <form action="create-lineup.php" method="post">
+        Select Comment to Delete: <select name="delete_comment_id" required>
+            <?php foreach ($userComments as $comment) { ?>
+                <option value="<?= $comment['comment_id'] ?>"><?= htmlspecialchars($comment['text']) ?></option>
+            <?php } ?>
+        </select>
+        <input type="submit" name="delete_comment" value="Delete Comment">
+    </form>
+
+    <!-- Display Other Users' Lineups -->
+    <!-- Display Other Users' Lineups -->
+<h1>Other Users' Lineups</h1>
+<?php foreach ($otherUsersLineups as $lineup) { ?>
+    <h2><?= htmlspecialchars($lineup['name']) ?></h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Player Name</th>
+                <th>Points per Game</th>
+                <th>Rebounds per Game</th>
+                <th>Assists per Game</th>
+                <th>Steals per Game</th>
+                <th>Blocks per Game</th>
+                <th>Field Goal %</th>
+                <!-- Add other headers if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $playersInLineup = fetchPlayersInLineup($pdo, $lineup['lineup_id']);
+            foreach ($playersInLineup as $player) {
+                $statistics = fetchPlayerStatistics($pdo, $player['player_id']);
+            ?>
+                <tr>
+                    <td><?= htmlspecialchars($player['name']) ?></td>
+                    <td><?= round(($statistics['points'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                    <td><?= round(($statistics['t_reb'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                    <td><?= round(($statistics['assists'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                    <td><?= round(($statistics['steals'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                    <td><?= round(($statistics['blocks'] / $statistics['games_played']) ?? 0, 1) ?></td>
+                    <td><?= $statistics['fg_percent'] ?? 'N/A' ?>%</td>
+                    <!-- Add other data fields if needed -->
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+<?php } ?>
 </body>
+
 </html>
