@@ -169,6 +169,19 @@ function fetchPlayerStatistics($pdo, $player_id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Function to fetch comments on Lineups 
+function fetchCommentsForLineup($pdo, $lineup_id) {
+    $stmt = $pdo->prepare("
+        SELECT c.text, mc.username, c.date_created 
+        FROM Comment c
+        INNER JOIN Makes_comment mc ON c.comment_id = mc.comment_id
+        INNER JOIN Commented_on co ON c.comment_id = co.comment_id
+        WHERE co.lineup_id = :lineup_id
+        ORDER BY c.date_created DESC");
+    $stmt->execute(['lineup_id' => $lineup_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (isset($_POST['lineup_name'])) {
@@ -317,8 +330,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    if (isset($_POST['add_comment'], $_POST['comment_text'], $_POST['lineup_id'])) {
+        $comment_text = $_POST['comment_text'];
+        $lineup_id = $_POST['lineup_id'];
+        // Call your function to add a comment
+        $commentMessage = addComment($pdo, $username, $lineup_id, $comment_text);
+    }
 
-    
 }
 ?>
 
@@ -449,6 +467,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php } ?>
         </tbody>
     </table>
+
+    <!-- Display Comments for this Lineup -->
+    <?php
+    $comments = fetchCommentsForLineup($pdo, $lineup['lineup_id']);
+    foreach ($comments as $comment) {
+        echo '<div class="comment">' . htmlspecialchars($comment['text']) . ' - Posted by: ' . htmlspecialchars($comment['username']) . '</div>';
+    }
+    ?>
+
+    <!-- Add Comment Form -->
+    <form action="" method="post">
+        <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
+        <input type="text" name="comment_text" placeholder="Enter comment">
+        <input type="submit" name="add_comment" value="Add Comment">
+    </form>
 <?php } ?>
 </body>
 
