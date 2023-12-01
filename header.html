@@ -8,33 +8,35 @@
 </head>
 <body>
   <header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <div class="container">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark navbar-custom">
+      <div class="container-fluid">
         <a class="navbar-brand" href="/menu.php">Dream Hoops</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/menu.php">Menu</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/my_lineups.php">My Lineups</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/other_lineups.php">Community Lineups</a>
-            </li>
+        <div class="navbar-collapse-wrapper">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/menu.php">Menu</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/my_lineups.php">My Lineups</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/other_lineups.php">Community Lineups</a>
+              </li>
             <!-- Add more navigation items as needed -->
-          </ul>
+            </ul>
+          </div>
         </div>
-        <span class="navbar-username"><?= htmlspecialchars($username) ?></span>
-      </div>
-    </nav>
-  </header>
+      <span class="navbar-username"><?= htmlspecialchars($username) ?></span>
+    </div>
+  </nav>
+</header>
   <!-- Bootstrap JS and dependencies -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
