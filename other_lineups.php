@@ -472,15 +472,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php
     $comments = fetchCommentsForLineup($pdo, $lineup['lineup_id']);
     foreach ($comments as $comment) {
-        echo '<div class="comment">' . htmlspecialchars($comment['text']) . ' - Posted by: ' . htmlspecialchars($comment['username']) . '</div>';
+        echo '<div class="comment">' . htmlspecialchars($comment['username']) . ': ' . htmlspecialchars($comment['text']) . '</div>';
     }
     ?>
 
     <!-- Add Comment Form -->
-    <form action="" method="post">
+    <form action="" method="post" class="comment-form">
         <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
-        <input type="text" name="comment_text" placeholder="Enter comment">
-        <input type="submit" name="add_comment" value="Add Comment">
+        <input type="text" name="comment_text" placeholder="Enter comment" class="comment-input">
+        <input type="submit" name="add_comment" value="Comment" class="comment-button">
     </form>
 <?php } ?>
 </body>

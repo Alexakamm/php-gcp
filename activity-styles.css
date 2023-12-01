@@ -51,3 +51,41 @@ footer {
   color: WhiteSmoke;
   padding: 10px;
 }
+
+.comment-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width : 80%;
+}
+
+.comment-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width : 20%;
+}
+
+.comment-button:hover {
+  background-color: #e34013;
+}
+
+.comment {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  text-align: left !important;
+}
