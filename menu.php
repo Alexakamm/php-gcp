@@ -9,6 +9,8 @@ if (!isset($_SESSION['username'])) {
 }
 
 $username = $_SESSION['username'];
+include('header.html');
+include('footer.html');
 ?>
 
 <!DOCTYPE html>
@@ -28,35 +30,6 @@ $username = $_SESSION['username'];
 </head>
 
 <body>
-    <!-- Your header content goes here -->
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="/menu.php">Dream Hoops</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/menu.php">Menu</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/create-lineup.php">Create Lineup</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/my_lineups.php">My Lineups</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/other_lineups.php">Other Lineups</a>
-                        </li>
-                        <!-- Add more navigation items as needed -->
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
     <!-- Your body content goes here -->
     <h1>Welcome, <?php echo $username; ?>!</h1>
     <p>Select an option below:</p>
