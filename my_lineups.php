@@ -170,6 +170,21 @@ function fetchPlayerStatistics($pdo, $player_id) {
 }
 
 
+
+function fetchUserLineupsWithPlayers($pdo, $username) {
+    $stmt = $pdo->prepare("SELECT * FROM Lineup WHERE lineup_id IN (SELECT lineup_id FROM Creates WHERE username = :username)");
+    $stmt->execute(['username' => $username]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Function to fetch player names in a specific lineup
+function fetchPlayerNamesInLineup($pdo, $lineup_id) {
+    $stmt = $pdo->prepare("SELECT p.player_name FROM Player p INNER JOIN Included_in i ON p.player_id = i.player_id WHERE i.lineup_id = :lineup_id");
+    $stmt->execute(['lineup_id' => $lineup_id]);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (isset($_POST['lineup_name'])) {
@@ -321,7 +336,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    if (isset($_POST['export_lineups'])) {
+        // Fetch all user lineups with players
+        $userLineupsWithPlayers = fetchUserLineupsWithPlayers($pdo, $username);
 
+        // Create an array to store lineup data
+        $lineupsData = [];
+
+        // Iterate through user lineups
+        foreach ($userLineupsWithPlayers as $lineup) {
+            $lineupData = [
+                'lineup_name' => $lineup['name'],
+                'players' => []
+            ];
+
+            // Fetch players in the lineup
+            $lineupPlayers = fetchPlayersInLineup($pdo, $lineup['lineup_id']);
+
+            // Iterate through players in the lineup
+            foreach ($lineupPlayers as $player) {
+                $lineupData['players'][] = $player['name'];
+            }
+
+            // Add lineup data to the array
+            $lineupsData[] = $lineupData;
+        }
+
+        // Convert the array to JSON
+        $jsonLineups = json_encode($lineupsData, JSON_PRETTY_PRINT);
+
+        // Output JSON
+        header('Content-Type: application/json');
+        header('Content-Disposition: attachment; filename="lineups_export.json"');
+        echo $jsonLineups;
+        exit();
+    }
     
 }
 ?>
@@ -432,6 +481,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php } ?>
 
 <!-- ... (Remaining HTML code) ... -->
+<!-- Export Lineups Button -->
+<form action="my_lineups.php" method="post">
+    <input type="hidden" name="export_lineups" value="true">
+    <button type="submit" class="btn btn-primary">Export Lineups as JSON</button>
+</form>
 
 
 

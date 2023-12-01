@@ -317,7 +317,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    if (isset($_POST['upload_json'])) {
+        // Check if a file was uploaded successfully
+        if (isset($_FILES['json_file']) && $_FILES['json_file']['error'] == UPLOAD_ERR_OK) {
+            $file_name = $_FILES['json_file']['name'];
+            $file_tmp = $_FILES['json_file']['tmp_name'];
 
+            // Read the JSON file content
+            $json_content = file_get_contents($file_tmp);
+            $json_data = json_decode($json_content, true);
+
+            if ($json_data === null) {
+                $lineupMessage = "Error decoding JSON file. Please make sure the file contains valid JSON.";
+            } else {
+                // Insert into Lineup table
+                try {
+                    // Begin Transaction
+                    $pdo->beginTransaction();
+
+                    $stmt = $pdo->prepare("INSERT INTO Lineup (name, date_created) VALUES (:name, NOW())");
+                    $stmt->execute(['name' => $json_data['lineup_name']]);
+                    $lineup_id = $pdo->lastInsertId(); // Get the last insert ID to use in Creates table
+
+                    $stmt = $pdo->prepare("INSERT INTO Creates (username, lineup_id) VALUES (:username, :lineup_id)");
+                    $stmt->execute(['username' => $username, 'lineup_id' => $lineup_id]);
+
+                    // Insert players from JSON data into Included_in table
+                    foreach ($json_data['selected_players'] as $player_id) {
+                        $stmt = $pdo->prepare("INSERT INTO Included_in (player_id, lineup_id) VALUES (:player_id, :lineup_id)");
+                        $stmt->execute(['player_id' => $player_id, 'lineup_id' => $lineup_id]);
+                    }
+
+                    // Commit Transaction
+                    $pdo->commit();
+                    $lineupMessage = "Lineup uploaded successfully.";
+                    $userLineups = fetchUserLineups($pdo, $username); // Fetch lineups again after insertion
+
+                } catch (PDOException $e) {
+                    // Rollback if there is an error
+                    $pdo->rollBack();
+                    $lineupMessage = "Error uploading lineup: " . $e->getMessage();
+                }
+            }
+        } else {
+            $lineupMessage = "Error uploading file. Please try again.";
+        }
+    }
     
 }
 ?>
@@ -520,5 +565,32 @@ if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
 </form> -->
 
    
+<div class="container mt-4">
+<h1>Upload a Lineup (JSON)</h1>
+    <p>Upload a JSON file containing the lineup information. The format should be as follows:</p>
+    <pre>
+{
+  "lineup_name": "Your Lineup Name",
+  "selected_players": [1, 2, 3, 4, 5]
+}
+    </pre>
+    <p>Please ensure that the file follows this structure, where "lineup_name" is the name of your lineup and "selected_players" is an array of player IDs.</p>
+
+    <?php if ($lineupMessage) {
+        echo "<p>$lineupMessage</p>";
+    } ?>
+        <form action="create-lineup.php" method="post" enctype="multipart/form-data" style="width: 80%;">
+            <div class="form-group">
+                <label for="json_file">Select JSON File:</label>
+                <input type="file" name="json_file" id="json_file" class="form-control-file" required accept=".json">
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="upload_json" value="true">
+                <input type="submit" value="Upload Lineup" class="btn btn-primary">
+            </div>
+        </form>
+
+        <!-- ... (existing HTML code) -->
+    </div>
 </body>
 </html>
