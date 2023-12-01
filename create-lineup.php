@@ -474,7 +474,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <?php } ?> -->
 
-    <!-- Lineup Like/Unlike Section -->
+    <!-- Lineup Like/Unlike Section
     <h1>Like or Unlike a Lineup</h1>
         <?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
         <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
@@ -489,7 +489,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
 
 
-    <!-- Comment Section -->
+   
     <h1>Add a Comment to a Lineup</h1>
     <?php if (!empty($commentMessage)) { echo "<p>$commentMessage</p>"; } ?>
     <form action="create-lineup.php" method="post">
@@ -504,7 +504,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="submit" value="Add Comment">
     </form>
   
-    <!-- Delete Comment Section -->
+    
 <h1>Delete a Comment</h1>
 <?php
 $userComments = fetchUserComments($pdo, $username); // Fetch comments to display in the dropdown
@@ -517,7 +517,7 @@ if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
         <?php } ?>
     </select>
     <input type="submit" name="delete_comment" value="Delete Comment">
-</form>
+</form> -->
 
    
 </body>

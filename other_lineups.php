@@ -372,7 +372,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h1>Like or Unlike a Lineup</h1>
     <?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
     <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
-    <form action="create-lineup.php" method="post">
+    <form action="other_lineups.php" method="post">
         Select Lineup: <select name="lineup_id" required>
             <?php foreach ($otherUsersLineups as $lineup) { ?>
                 <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
@@ -385,7 +385,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Comment Section -->
     <h1>Add a Comment to a Lineup</h1>
     <?php if (!empty($commentMessage)) { echo "<p>$commentMessage</p>"; } ?>
-    <form action="create-lineup.php" method="post">
+    <form action="other_lineups.php" method="post">
         <label for="comment_lineup">Select Lineup:</label>
         <select name="comment_lineup_id" id="comment_lineup" required>
             <?php foreach ($otherUsersLineups as $lineup) { ?>
@@ -403,7 +403,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userComments = fetchUserComments($pdo, $username); // Fetch comments to display in the dropdown
     if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
     ?>
-    <form action="create-lineup.php" method="post">
+    <form action="other_lineups.php" method="post">
         Select Comment to Delete: <select name="delete_comment_id" required>
             <?php foreach ($userComments as $comment) { ?>
                 <option value="<?= $comment['comment_id'] ?>"><?= htmlspecialchars($comment['text']) ?></option>
