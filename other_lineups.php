@@ -400,21 +400,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="submit" name="unlike" value="Unlike Lineup">
     </form>
 
-    <!-- Comment Section -->
-    <h1>Add a Comment to a Lineup</h1>
-    <?php if (!empty($commentMessage)) { echo "<p>$commentMessage</p>"; } ?>
-    <form action="other_lineups.php" method="post">
-        <label for="comment_lineup">Select Lineup:</label>
-        <select name="comment_lineup_id" id="comment_lineup" required>
-            <?php foreach ($otherUsersLineups as $lineup) { ?>
-                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-            <?php } ?>
-        </select>
-        <label for="comment_text">Comment:</label>
-        <textarea name="comment_text" id="comment_text" required maxlength="500"></textarea>
-        <input type="submit" value="Add Comment">
-    </form>
-
     <!-- Delete Comment Section -->
     <h1>Delete a Comment</h1>
     <?php
