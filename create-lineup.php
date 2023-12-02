@@ -49,6 +49,13 @@ function fetchPlayers($pdo) {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function fetchPlayersStatisticsSorted($pdo, $orderBy) {
+    $stmt = $pdo->prepare("SELECT Player.*, Statistics.* FROM Player INNER JOIN Statistics ON Player.player_id = Statistics.player_id ORDER BY $orderBy");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // Function to fetch players in a specific lineup
 function fetchPlayersInLineup($pdo, $lineup_id) {
     $stmt = $pdo->prepare("SELECT p.* FROM Player p INNER JOIN Included_in i ON p.player_id = i.player_id WHERE i.lineup_id = :lineup_id");
@@ -96,11 +103,37 @@ function fetchUserComments($pdo, $username) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+$filter = $_GET['filter'] ?? null;
 
-$players = fetchPlayers($pdo);
+switch ($filter) {
+    case 'ppg':
+        $orderBy = 'ppg DESC';
+        break;
+    case 'rpg':
+        $orderBy = 'rpg DESC';
+        break;
+    case 'apg':
+        $orderBy = 'apg DESC';
+        break;
+    case 'bpg':
+        $orderBy = 'bpg DESC';
+        break;
+    case 'spg':
+        $orderBy = 'spg DESC';
+        break;
+    default:
+        $orderBy = 'player_id';
+        break;
+}
+
+if ($filter) {
+    $players = fetchPlayersStatisticsSorted($pdo, $orderBy);
+} else {
+    $players = fetchPlayers($pdo);
+}
+
 $userLineups = fetchUserLineups($pdo, $username);
 $otherUsersLineups = fetchOtherUsersLineups($pdo, $username);
-
 
 // Function to like a lineup
 function likeLineup($pdo, $lineup_id, $username) {
@@ -164,14 +197,6 @@ function addComment($pdo, $username, $lineup_id, $text) {
         $pdo->rollBack();
         return "Error adding comment: " . $e->getMessage();
     }
-}
-
-
-function fetchPlayerStatistics($pdo, $player_id) {
-    $stmt = $pdo->prepare("SELECT * FROM Statistics WHERE player_id = :player_id");
-    $stmt->bindParam(':player_id', $player_id);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -391,31 +416,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Players with Statistics</h1>
 
         <div style="max-height: 500px; overflow-y: scroll; width: 80%;">
+        <div class="filter-buttons mb-3 text-center">
+        <a href="create-lineup.php?filter=ppg" class="btn btn-info btn-sm">Filter by PPG</a>
+        <a href="create-lineup.php?filter=rpg" class="btn btn-info btn-sm">Filter by RPG</a>
+        <a href="create-lineup.php?filter=apg" class="btn btn-info btn-sm">Filter by APG</a>
+        <a href="create-lineup.php?filter=bpg" class="btn btn-info btn-sm">Filter by BPG</a>
+        <a href="create-lineup.php?filter=spg" class="btn btn-info btn-sm">Filter by SPG</a>
+        </div>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Points Per Game</th>
-                        <th>Rebounds Per Game</th>
-                        <th>Assists Per Game</th>
-                        <!-- Add other statistics headers here -->
+                        <th>Points Per Game PPG</th>
+                        <th>Rebounds Per Game RPG</th>
+                        <th>Assists Per Game APG</th>
+                        <th>Blocks Per Game BPG</th>
+                        <th>Steals Per Game SPG</th> 
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($players as $player) { ?>
-                        <?php
-                        $statistics = fetchPlayerStatistics($pdo, $player['player_id']);
-                        $pointsPerGame = $statistics['points'] / $statistics['games_played'];
-                        $reboundsPerGame = $statistics['t_reb'] / $statistics['games_played'];
-                        $assistsPerGame = $statistics['assists'] / $statistics['games_played'];
-                        // Calculate other statistics per game here
-                        ?>
                         <tr>
                             <td><?= htmlspecialchars($player['name']) ?></td>
-                            <td><?= number_format($pointsPerGame, 1) ?></td>
-                            <td><?= number_format($reboundsPerGame, 1) ?></td>
-                            <td><?= number_format($assistsPerGame, 1) ?></td>
+                            <td><?= number_format($player['ppg'], 1) ?></td>
+                            <td><?= number_format($player['rpg'], 1) ?></td>
+                            <td><?= number_format($player['apg'], 1) ?></td>
+                            <td><?= number_format($player['bpg'], 1) ?></td>
+                            <td><?= number_format($player['spg'], 1) ?></td>
                             <!-- Add other statistics data here -->
                             <td>
                                 <form action="create-lineup.php" method="post">
