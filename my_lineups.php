@@ -389,6 +389,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php foreach ($userLineups as $lineup) { ?>
     <div class="lineup-container">
         <h2><?= htmlspecialchars($lineup['name']) ?> Lineup</h2>
+        <!-- Edit lineup form -->
+        <form method="post" action="update_lineup.php">
+            <input type="hidden" name="lineup_id" value="<?= $lineup['lineup_id'] ?>">
+            <label>
+                <input type="text" name="new_name" placeholder="Enter new lineup name" style="margin-right: 10px;">
+            </label>
+            <span style="display: inline-block; width: 20px;"></span>
+            <button type="submit" class="btn btn-primary">Update Name</button>
+        </form>
         <?php 
         $lineupPlayers = fetchPlayersInLineup($pdo, $lineup['lineup_id']);
         if (!empty($lineupPlayers)): ?>
@@ -418,7 +427,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td><?= round(($statistics['blocks'] / $statistics['games_played']) ?? 0, 1) ?></td>
                             <td><?= $statistics['fg_percent'] ?? 'N/A' ?>%</td>
                             <td>
-                                <!-- Add your delete player button and form here -->
+                                <!-- delete player button and form here -->
                                 <form action="my_lineups.php" method="post" class="player-delete-form">
                                     <input type="hidden" name="remove_player_id" value="<?= $player['player_id'] ?>">
                                     <input type="hidden" name="remove_lineup_id" value="<?= $lineup['lineup_id'] ?>">
@@ -432,7 +441,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php else: ?>
             <p>No players in this lineup.</p>
         <?php endif; ?>
-        <!-- Add delete lineup button and confirmation prompt here -->
+        <!-- delete lineup button and confirmation prompt here -->
         <form action="my_lineups.php" method="post" class="lineup-delete-form">
             <input type="hidden" name="delete_lineup_id" value="<?= $lineup['lineup_id'] ?>">
             <button type="submit" class="btn btn-danger" name="confirm_delete" onclick="return confirm('Are you sure you want to delete this lineup?');">Delete Lineup</button>
