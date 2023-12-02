@@ -56,6 +56,12 @@ function fetchPlayersStatisticsSorted($pdo, $orderBy) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function searchPlayersByName($pdo, $search) {
+    $stmt = $pdo->prepare("SELECT Player.*, Statistics.* FROM Player INNER JOIN Statistics ON Player.player_id = Statistics.player_id WHERE Player.name LIKE :search");
+    $stmt->execute(['search' => '%' . $search . '%']);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // Function to fetch players in a specific lineup
 function fetchPlayersInLineup($pdo, $lineup_id) {
     $stmt = $pdo->prepare("SELECT p.* FROM Player p INNER JOIN Included_in i ON p.player_id = i.player_id WHERE i.lineup_id = :lineup_id");
@@ -103,6 +109,7 @@ function fetchUserComments($pdo, $username) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+$search = $_GET['search'] ?? null;
 $filter = $_GET['filter'] ?? null;
 
 switch ($filter) {
@@ -126,7 +133,9 @@ switch ($filter) {
         break;
 }
 
-if ($filter) {
+if ($search) {
+    $players = searchPlayersByName($pdo, $search);
+} elseif ($filter) {
     $players = fetchPlayersStatisticsSorted($pdo, $orderBy);
 } else {
     $players = fetchPlayers($pdo);
@@ -416,6 +425,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Players with Statistics</h1>
 
         <div style="max-height: 500px; overflow-y: scroll; width: 80%;">
+        <form action="create-lineup.php" method="GET">
+            <input type="text" name="search" placeholder="Search by player name">
+            <button type="submit">Search</button>
+        </form>
         <div class="filter-buttons mb-3 text-center">
         <a href="create-lineup.php?filter=ppg" class="btn btn-info btn-sm">Filter by PPG</a>
         <a href="create-lineup.php?filter=rpg" class="btn btn-info btn-sm">Filter by RPG</a>
