@@ -56,6 +56,12 @@ function fetchPlayersStatisticsSorted($pdo, $orderBy) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function fetchPlayersStatistics($pdo) {
+    $stmt = $pdo->prepare("SELECT Player.*, Statistics.* FROM Player INNER JOIN Statistics ON Player.player_id = Statistics.player_id");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function searchPlayersByName($pdo, $search) {
     $stmt = $pdo->prepare("SELECT Player.*, Statistics.* FROM Player INNER JOIN Statistics ON Player.player_id = Statistics.player_id WHERE Player.name LIKE :search");
     $stmt->execute(['search' => '%' . $search . '%']);
@@ -138,7 +144,7 @@ if ($search) {
 } elseif ($filter) {
     $players = fetchPlayersStatisticsSorted($pdo, $orderBy);
 } else {
-    $players = fetchPlayers($pdo);
+    $players = fetchPlayersStatistics($pdo);
 }
 
 $userLineups = fetchUserLineups($pdo, $username);
@@ -422,9 +428,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
 
-        <h1>Players with Statistics</h1>
-
-        <div style="max-height: 500px; overflow-y: scroll; width: 80%;">
+        <h1>Add Players to Your Lineups</h1>
         <form action="create-lineup.php" method="GET">
             <input type="text" name="search" placeholder="Search by player name">
             <button type="submit">Search</button>
@@ -436,6 +440,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="create-lineup.php?filter=bpg" class="btn btn-info btn-sm">Filter by BPG</a>
         <a href="create-lineup.php?filter=spg" class="btn btn-info btn-sm">Filter by SPG</a>
         </div>
+        <div style="max-height: 500px; overflow-y: scroll; width: 100%;">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -592,8 +597,6 @@ if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
                 <input type="submit" value="Upload Lineup" class="btn btn-primary">
             </div>
         </form>
-
-        <!-- ... (existing HTML code) -->
     </div>
 </body>
 </html>
