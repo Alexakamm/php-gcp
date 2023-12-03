@@ -434,11 +434,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Search</button>
         </form>
         <div class="filter-buttons mb-3 text-center">
-        <a href="create-lineup.php?filter=ppg" class="btn btn-info btn-sm">Filter by PPG</a>
-        <a href="create-lineup.php?filter=rpg" class="btn btn-info btn-sm">Filter by RPG</a>
-        <a href="create-lineup.php?filter=apg" class="btn btn-info btn-sm">Filter by APG</a>
-        <a href="create-lineup.php?filter=bpg" class="btn btn-info btn-sm">Filter by BPG</a>
-        <a href="create-lineup.php?filter=spg" class="btn btn-info btn-sm">Filter by SPG</a>
+        <a href="create-lineup.php?filter=ppg" class="btn btn-info btn-sm">Sort by PPG</a>
+        <a href="create-lineup.php?filter=rpg" class="btn btn-info btn-sm">Sort by RPG</a>
+        <a href="create-lineup.php?filter=apg" class="btn btn-info btn-sm">Sort by APG</a>
+        <a href="create-lineup.php?filter=bpg" class="btn btn-info btn-sm">Sort by BPG</a>
+        <a href="create-lineup.php?filter=spg" class="btn btn-info btn-sm">Sort by SPG</a>
         </div>
         <div style="max-height: 500px; overflow-y: scroll; width: 100%;">
             <table class="table table-bordered">
