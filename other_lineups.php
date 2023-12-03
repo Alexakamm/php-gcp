@@ -86,7 +86,8 @@ function fetchUserLineups($pdo, $username) {
 function fetchOtherUsersLineups($pdo, $username) {
     $stmt = $pdo->prepare("
         SELECT l.*, 
-        (SELECT COUNT(*) FROM Likes WHERE lineup_id = l.lineup_id AND username = :username) as liked
+        (SELECT COUNT(*) FROM Likes WHERE lineup_id = l.lineup_id) as like_count,
+        (SELECT COUNT(*) FROM Likes WHERE lineup_id = l.lineup_id AND username = :username) as liked_by_user
         FROM Lineup l 
         WHERE l.lineup_id NOT IN (SELECT lineup_id FROM Creates WHERE username = :username)
     ");
@@ -385,22 +386,37 @@ $otherUsersLineups = fetchOtherUsersLineups($pdo, $username);
     <!-- Display Other Users' Lineups -->
 <h1>Other Users' Lineups</h1>
 <?php foreach ($otherUsersLineups as $lineup) { ?>
-    <div class="lineup-name-container">
-        <div class="lineup-header" style="display: flex; align-items: center; gap: 10px; justify-content: flex-start;">
-            <h2 style="margin-bottom: 0;"><?= htmlspecialchars($lineup['name']) ?></h2>
-            <?php if ($lineup['liked']): ?>
-                <form action="other_lineups.php" method="post" style="margin-bottom: 0;">
-                    <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
-                    <button type="submit" name="unlike" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Unlike</button>
-                </form>
-            <?php else: ?>
-                <form action="other_lineups.php" method="post" style="margin-bottom: 0;">
-                    <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
-                    <button type="submit" name="like" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Like</button>
-                </form>
-            <?php endif; ?>
-        </div>
+    <div class="lineup-header">
+        <h2><?= htmlspecialchars($lineup['name']) ?></h2>
+        <span><?= $lineup['like_count'] ?> likes</span>
+        <?php if ($lineup['liked_by_user']): ?>
+            <form action="other_lineups.php" method="post">
+                <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
+                <button type="submit" name="unlike" class="btn btn-primary">Unlike</button>
+            </form>
+        <?php else: ?>
+            <form action="other_lineups.php" method="post">
+                <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
+                <button type="submit" name="like" class="btn btn-primary">Like</button>
+            </form>
+        <?php endif; ?>
     </div>
+<!--    <div class="lineup-name-container">-->
+<!--        <div class="lineup-header" style="display: flex; align-items: center; gap: 10px; justify-content: flex-start;">-->
+<!--            <h2 style="margin-bottom: 0;">--><?php //= htmlspecialchars($lineup['name']) ?><!--</h2>-->
+<!--            --><?php //if ($lineup['liked']): ?>
+<!--                <form action="other_lineups.php" method="post" style="margin-bottom: 0;">-->
+<!--                    <input type="hidden" name="lineup_id" value="--><?php //= htmlspecialchars($lineup['lineup_id']) ?><!--">-->
+<!--                    <button type="submit" name="unlike" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Unlike</button>-->
+<!--                </form>-->
+<!--            --><?php //else: ?>
+<!--                <form action="other_lineups.php" method="post" style="margin-bottom: 0;">-->
+<!--                    <input type="hidden" name="lineup_id" value="--><?php //= htmlspecialchars($lineup['lineup_id']) ?><!--">-->
+<!--                    <button type="submit" name="like" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Like</button>-->
+<!--                </form>-->
+<!--            --><?php //endif; ?>
+<!--        </div>-->
+<!--    </div>-->
     <table class="table table-bordered">
         <thead>
             <tr>
