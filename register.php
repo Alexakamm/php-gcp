@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="submit" value="Register" class="btn" />
     </form>
     <!-- Link to the login page -->
-    <p>Already have an account? <a href="login.php">Log in here</a>.</p>
+    <p>Already have an account? <a href="/">Log in here</a>.</p>
   </div>
   
 </body>

@@ -7,9 +7,6 @@ switch ($request) {
     case '':
         require 'main.php';
         break;
-    case '/login.php':
-        require 'login.php';
-        break;
     case '/register.php':
         require 'register.php';
         break;

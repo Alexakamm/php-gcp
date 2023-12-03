@@ -9,7 +9,7 @@ $username = $_SESSION['username'] ?? null;
 $deleteCommentMessage = '';
 
 if (!$username){
-    header("location: login.php");
+    header("location: main.php");
     exit();
 }
 
@@ -456,8 +456,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit" class="btn btn-primary">Export Lineups as JSON</button>
 </form>
 
-
-
+<form action="my_lineups.php" method="post">
+    <input type="hidden" name="export_lineups" value="true">
+    <button type="submit" class="btn btn-primary">Export Lineups as JSON</button>
+</form>
 
 </body>
 

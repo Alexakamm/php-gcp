@@ -9,7 +9,7 @@ $username = $_SESSION['username'] ?? null;
 $deleteCommentMessage = '';
 
 if (!$username){
-    header("location: login.php");
+    header("location: main.php");
     exit();
 }
 

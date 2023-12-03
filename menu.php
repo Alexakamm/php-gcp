@@ -4,7 +4,7 @@ include('connect.php');
 session_start();
 
 if (!isset($_SESSION['username'])) {
-    header("location: login.php"); // Redirect to login if not logged in
+    header("location: main.php"); // Redirect to login if not logged in
     exit();
 }
 

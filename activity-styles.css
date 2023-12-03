@@ -125,8 +125,12 @@ footer {
 
 .container {
   max-width: 100%; 
-  padding: 15px;
+  padding: 50px;
 }
+
+/*.form-group {*/
+/*  padding-bottom: 10px;*/
+/*}*/
 
 h1 {
   color: #333;
