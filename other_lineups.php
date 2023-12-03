@@ -420,14 +420,22 @@ $otherUsersLineups = fetchOtherUsersLineups($pdo, $username);
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
+
+        <!-- Add Comment Form -->
+        <form action="" method="post" class="comment-form">
+            <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
+            <input type="text" name="comment_text" placeholder="Enter comment" class="comment-input">
+            <input type="submit" name="add_comment" value="Comment" class="comment-button">
+        </form>
+
     </div>
 
-    <!-- Add Comment Form -->
-    <form action="" method="post" class="comment-form">
-        <input type="hidden" name="lineup_id" value="<?= htmlspecialchars($lineup['lineup_id']) ?>">
-        <input type="text" name="comment_text" placeholder="Enter comment" class="comment-input">
-        <input type="submit" name="add_comment" value="Comment" class="comment-button">
-    </form>
+<!--  Add Comment Form -->
+<!--    <form action="" method="post" class="comment-form">-->
+<!--        <input type="hidden" name="lineup_id" value="--><?php //= htmlspecialchars($lineup['lineup_id']) ?><!--">-->
+<!--        <input type="text" name="comment_text" placeholder="Enter comment" class="comment-input">-->
+<!--        <input type="submit" name="add_comment" value="Comment" class="comment-button">-->
+<!--    </form>-->
 <?php } ?>
 </body>
 
