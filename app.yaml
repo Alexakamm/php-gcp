@@ -15,9 +15,9 @@ handlers:
   script: auto
 
 # Serve all static files directly.
-- url: /(.*\.(gif|png|jpg|css|js))$
+- url: /(.*\.(gif|png|jpg|jpeg|css|js))$
   static_files: \1
-  upload: .*\.(gif|png|jpg|css|js)$
+  upload: .*\.(gif|png|jpg|jpeg|css|js)$
 
 # Serve the index.php file when the root of the domain is requested.
 - url: /.*
