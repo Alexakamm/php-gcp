@@ -440,7 +440,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="create-lineup.php?filter=bpg" class="btn btn-info btn-sm">Sort by BPG</a>
         <a href="create-lineup.php?filter=spg" class="btn btn-info btn-sm">Sort by SPG</a>
         </div>
-        <div style="max-height: 500px; overflow-y: scroll; width: 100%;">
+        <div style="max-height: 500px; overflow-y: scroll; overflow-x: hidden; width: 100%;">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -464,15 +464,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td><?= number_format($player['spg'], 1) ?></td>
                             <!-- Add other statistics data here -->
                             <td>
-                                <form action="create-lineup.php" method="post">
-                                    <input type="hidden" name="player_id" value="<?= $player['player_id'] ?>">
-                                    <select name="lineup_id" required>
-                                        <?php foreach ($userLineups as $lineup) { ?>
-                                            <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <input type="submit" value="Add to Lineup" class="btn btn-success">
-                                </form>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <form action="create-lineup.php" method="post">
+                                        <input type="hidden" name="player_id" value="<?= $player['player_id'] ?>">
+                                        <select name="lineup_id" required>
+                                            <?php foreach ($userLineups as $lineup) { ?>
+                                                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <input type="submit" value="Add to Lineup" class="btn btn-success">
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     <?php } ?>
@@ -481,98 +483,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-    <!-- Remove Player from Lineup Section
-    <h1>Remove a Player from a Lineup</h1>
-    <form action="create-lineup.php" method="post">
-        Player to Remove: <select name="remove_player_id" required>
-            <?php foreach ($players as $player) { ?>
-                <option value="<?= $player['player_id'] ?>"><?= htmlspecialchars($player['name']) ?></option>
-            <?php } ?>
-        </select>
-        From Lineup: <select name="remove_lineup_id" required>
-            <?php foreach ($userLineups as $lineup) { ?>
-                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-            <?php } ?>
-        </select>
-        <input type="submit" value="Remove Player">
-    </form>
-    
-    <h1>Delete a Lineup</h1>
-    <form action="create-lineup.php" method="post">
-        Select Lineup to Delete: <select name="delete_lineup_id" required>
-            <?php foreach ($userLineups as $lineup) { ?>
-                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-            <?php } ?>
-        </select>
-        <input type="submit" value="Delete Lineup">
-    </form> -->
-
-    
-
-   
-    <!-- <h1>Your Lineups and Players</h1>
-    <?php foreach ($userLineups as $lineup) { ?>
-        <h2><?= htmlspecialchars($lineup['name']) ?> Lineup</h2>
-        <?php 
-        $lineupPlayers = fetchPlayersInLineup($pdo, $lineup['lineup_id']);
-        if (!empty($lineupPlayers)): ?>
-            <ul>
-                <?php foreach ($lineupPlayers as $player) { ?>
-                    <li><?= htmlspecialchars($player['name']) ?></li>
-                <?php } ?>
-            </ul>
-        <?php else: ?>
-            <p>No players in this lineup.</p>
-        <?php endif; ?>
-
-    <?php } ?> -->
-
-    <!-- Lineup Like/Unlike Section
-    <h1>Like or Unlike a Lineup</h1>
-        <?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
-        <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
-        <form action="create-lineup.php" method="post">
-            Select Lineup: <select name="lineup_id" required>
-                <?php foreach ($otherUsersLineups as $lineup) { ?>
-                    <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-                <?php } ?>
-            </select>
-            <input type="submit" name="like" value="Like Lineup">
-            <input type="submit" name="unlike" value="Unlike Lineup">
-        </form>
-
-
-   
-    <h1>Add a Comment to a Lineup</h1>
-    <?php if (!empty($commentMessage)) { echo "<p>$commentMessage</p>"; } ?>
-    <form action="create-lineup.php" method="post">
-        <label for="comment_lineup">Select Lineup:</label>
-        <select name="comment_lineup_id" id="comment_lineup" required>
-            <?php foreach ($otherUsersLineups as $lineup) { ?>
-                <option value="<?= $lineup['lineup_id'] ?>"><?= htmlspecialchars($lineup['name']) ?></option>
-            <?php } ?>
-        </select>
-        <label for="comment_text">Comment:</label>
-        <textarea name="comment_text" id="comment_text" required maxlength="500"></textarea>
-        <input type="submit" value="Add Comment">
-    </form>
-  
-    
-<h1>Delete a Comment</h1>
-<?php
-$userComments = fetchUserComments($pdo, $username); // Fetch comments to display in the dropdown
-if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
-?>
-<form action="create-lineup.php" method="post">
-    Select Comment to Delete: <select name="delete_comment_id" required>
-        <?php foreach ($userComments as $comment) { ?>
-            <option value="<?= $comment['comment_id'] ?>"><?= htmlspecialchars($comment['text']) ?></option>
-        <?php } ?>
-    </select>
-    <input type="submit" name="delete_comment" value="Delete Comment">
-</form> -->
-
-   
 <div class="container mt-4">
 <h1>Upload a Lineup (JSON)</h1>
     <p>Upload a JSON file containing the lineup information. The format should be as follows:</p>

@@ -355,9 +355,9 @@ $otherUsersLineups = fetchOtherUsersLineups($pdo, $username);
 <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
 
     <!-- Display Other Users' Lineups -->
-<h1>Other Users' Lineups</h1>
+<h1>Community Lineups</h1>
 <?php foreach ($otherUsersLineups as $lineup) { ?>
-    <div class="lineup-header">
+    <div style= "display: flex; justify-content: space-between; align-items: left;" >
         <h2><?= htmlspecialchars($lineup['name']) ?></h2>
         <span><?= $lineup['like_count'] ?> likes</span>
         <?php if ($lineup['liked_by_user']): ?>

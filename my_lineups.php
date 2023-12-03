@@ -388,7 +388,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h1>Your Lineups and Players</h1>
 <?php foreach ($userLineups as $lineup) { ?>
     <div class="lineup-container">
-        <h2><?= htmlspecialchars($lineup['name']) ?> Lineup</h2>
+        <h2><?= htmlspecialchars($lineup['name']) ?></h2>
         <!-- Edit lineup form -->
         <form method="post" action="update_lineup.php">
             <input type="hidden" name="lineup_id" value="<?= $lineup['lineup_id'] ?>">
@@ -449,18 +449,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 <?php } ?>
 
-<!-- ... (Remaining HTML code) ... -->
 <!-- Export Lineups Button -->
 <form action="my_lineups.php" method="post">
     <input type="hidden" name="export_lineups" value="true">
     <button type="submit" class="btn btn-primary">Export Lineups as JSON</button>
 </form>
-
-<form action="my_lineups.php" method="post">
-    <input type="hidden" name="export_lineups" value="true">
-    <button type="submit" class="btn btn-primary">Export Lineups as JSON</button>
-</form>
-
 </body>
 
 </html>

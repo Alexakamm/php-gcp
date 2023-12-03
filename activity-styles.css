@@ -94,7 +94,7 @@ footer {
   border-radius: 4px;
   padding-bottom: 80px;
   padding-top: 10px;
-  /*margin-top: 10px;*/
+  align-items: flex-start;
 }
 
 .navbar-custom .container-fluid {
@@ -122,15 +122,10 @@ footer {
   color: #FFFFFF;
 }
 
-
 .container {
   max-width: 100%; 
   padding: 50px;
 }
-
-/*.form-group {*/
-/*  padding-bottom: 10px;*/
-/*}*/
 
 h1 {
   color: #333;
