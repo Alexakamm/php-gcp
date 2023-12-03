@@ -333,35 +333,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $commentMessage = addComment($pdo, $username, $comment_lineup_id, $comment_text);
     }
 
-//    // Handle delete comment form submission
-//    if (isset($_POST['delete_comment'], $_POST['delete_comment_id'])) {
-//        $comment_id = $_POST['delete_comment_id'];
-//        try {
-//            $stmt = $pdo->prepare("DELETE FROM Comment WHERE comment_id = :comment_id");
-//            $stmt->execute(['comment_id' => $comment_id]);
-//            if ($stmt->rowCount() > 0) {
-//                $deleteCommentMessage = "Comment deleted successfully.";
-//            } else $deleteCommentMessage = "Comment not found or already deleted.";
-//        } catch (PDOException $e) {
-//            $deleteCommentMessage = "Error deleting comment: " . $e->getMessage();
-//        }
-//    }
-
-//    // Handle the delete comment request if it's been made
-//    if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['delete_comment'], $_POST['delete_comment_id'])) {
-//        $comment_id = $_POST['delete_comment_id'];
-//        // Delete the comment only if it belongs to the logged-in user
-//        $stmt = $pdo->prepare("DELETE FROM Comment WHERE comment_id = :comment_id AND comment_id IN (SELECT comment_id FROM Makes_comment WHERE username = :username)");
-//        $stmt->execute(['comment_id' => $comment_id, 'username' => $username]);
-//        if ($stmt->rowCount()) {
-//            // Comment was deleted
-//            $deleteCommentMessage = "Comment deleted successfully.";
-//        } else {
-//            // Comment was not deleted
-//            $deleteCommentMessage = "Failed to delete the comment.";
-//        }
-//    }
-
     if (isset($_POST['add_comment'], $_POST['comment_text'], $_POST['lineup_id'])) {
         $comment_text = $_POST['comment_text'];
         $lineup_id = $_POST['lineup_id'];
@@ -380,33 +351,8 @@ $otherUsersLineups = fetchOtherUsersLineups($pdo, $username);
 <html lang="en">
 <body>
 <!-- Lineup Like/Unlike Section -->
-<!--    <h1>Like or Unlike a Lineup</h1>-->
-    <?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
-    <?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
-<!--    <form action="other_lineups.php" method="post">-->
-<!--        Select Lineup: <select name="lineup_id" required>-->
-<!--            --><?php //foreach ($otherUsersLineups as $lineup) { ?>
-<!--                <option value="--><?php //= $lineup['lineup_id'] ?><!--">--><?php //= htmlspecialchars($lineup['name']) ?><!--</option>-->
-<!--            --><?php //} ?>
-<!--        </select>-->
-<!--        <input type="submit" name="like" value="Like Lineup">-->
-<!--        <input type="submit" name="unlike" value="Unlike Lineup">-->
-<!--    </form>-->
-
-<!--    Delete Comment Section -->
-<!--    <h1>Delete a Comment</h1>-->
-<!--    --><?php
-//    $userComments = fetchUserComments($pdo, $username); // Fetch comments to display in the dropdown
-//    if (!empty($deleteCommentMessage)) { echo "<p>$deleteCommentMessage</p>"; }
-//    ?>
-<!--    <form action="other_lineups.php" method="post">-->
-<!--        Select Comment to Delete: <select name="delete_comment_id" required>-->
-<!--            --><?php //foreach ($userComments as $comment) { ?>
-<!--                <option value="--><?php //= $comment['comment_id'] ?><!--">--><?php //= htmlspecialchars($comment['text']) ?><!--</option>-->
-<!--            --><?php //} ?>
-<!--        </select>-->
-<!--        <input type="submit" name="delete_comment" value="Delete Comment">-->
-<!--    </form>-->
+<?php if (!empty($likeMessage)) { echo "<p>$likeMessage</p>"; } ?>
+<?php if (!empty($unlikeMessage)) { echo "<p>$unlikeMessage</p>"; } ?>
 
     <!-- Display Other Users' Lineups -->
 <h1>Other Users' Lineups</h1>
