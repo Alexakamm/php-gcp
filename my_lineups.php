@@ -450,10 +450,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php } ?>
 
 <!-- Export Lineups Button -->
+
 <form action="my_lineups.php" method="post">
     <input type="hidden" name="export_lineups" value="true">
     <button type="submit" class="btn btn-primary">Export Lineups as JSON</button>
 </form>
-</body>
 
+</body>
+<h1 style="color:white; font-size:50px;">Give us a good grade is you see this!<h1>
 </html>
